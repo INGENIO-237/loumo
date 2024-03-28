@@ -1,7 +1,7 @@
 import { Service } from "typedi";
 import UserService from "../services/user.services";
 import { Request, Response } from "express";
-import { CreateUserInput } from "../schemas/user.schemas";
+import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
 
 @Service()
 export default class UserController {
@@ -20,5 +20,15 @@ export default class UserController {
     const user = await this.service.createUser(req.body);
 
     return res.status(201).json(user);
+  }
+
+  async updateUser(
+    req: Request<UpdateUserInput["params"], {}, UpdateUserInput["body"]>,
+    res: Response
+  ) {
+    const { user } = req.params;
+    await this.service.updateUser(user, req.body);
+
+    return res.sendStatus(200);
   }
 }
