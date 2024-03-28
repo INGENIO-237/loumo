@@ -2,6 +2,7 @@ import { Service } from "typedi";
 import UserService from "../services/user.services";
 import { Request, Response } from "express";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
+import HTTP from "../constants/http.responses";
 
 @Service()
 export default class UserController {
@@ -10,7 +11,7 @@ export default class UserController {
   async getUsers(req: Request, res: Response) {
     const users = await this.service.getUsers();
 
-    return res.status(200).json(users);
+    return res.status(HTTP.OK).json(users);
   }
 
   async createUser(
@@ -19,7 +20,7 @@ export default class UserController {
   ) {
     const user = await this.service.createUser(req.body);
 
-    return res.status(201).json(user);
+    return res.status(HTTP.CREATED).json(user);
   }
 
   async updateUser(
@@ -29,6 +30,6 @@ export default class UserController {
     const { user } = req.params;
     await this.service.updateUser(user, req.body);
 
-    return res.sendStatus(200);
+    return res.sendStatus(HTTP.OK);
   }
 }
