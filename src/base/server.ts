@@ -7,6 +7,8 @@ export default function createServer() {
 
   connectToDatabase();
 
+  server.use(express.json());
+
   router(server);
 
   return server;

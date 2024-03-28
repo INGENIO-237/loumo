@@ -1,5 +1,6 @@
 import { Service } from "typedi";
 import UserRepository from "../repositories/user.repository";
+import { CreateUserInput } from "../schemas/user.schemas";
 
 @Service()
 export default class UserService {
@@ -7,5 +8,9 @@ export default class UserService {
 
   async getUsers() {
     return await this.repository.getUsers();
+  }
+
+  async createUser(user: CreateUserInput["body"]){
+    return await this.repository.createUser(user)
   }
 }

@@ -1,4 +1,6 @@
 import { Document, Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
+import config from "../config";
 
 type Phone = {
   country: {
@@ -54,12 +56,35 @@ const userSchema = new Schema(
       ],
       default: [],
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otp: Number,
   },
   {
     timestamps: true,
   }
 );
 
+userSchema.pre<UserDocument>("save", async function (next) {
+  const user = this;
+
+  if(!user.isModified("password")) return next();
+
+  const salt = await bcrypt.genSalt(config.SALT_FACTOR);
+
+  console.log({ salt });
+
+  const hash = await bcrypt.hash(user.password, salt);
+
+  console.log({ hash });
+
+  user.password = hash;
+
+  return next();
+});
+
 const User = model("User", userSchema);
 
-export default User
+export default User;
