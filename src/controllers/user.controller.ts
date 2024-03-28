@@ -3,6 +3,7 @@ import UserService from "../services/user.services";
 import { Request, Response } from "express";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
 import HTTP from "../constants/http.responses";
+import ApiError from "../utils/errors/errors.base";
 
 @Service()
 export default class UserController {
