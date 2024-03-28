@@ -22,6 +22,8 @@ export interface UserDocument extends Document {
   phone?: Phone;
   password: string;
   shippingAddresses?: ShippingAddress[] | [];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema(
@@ -85,6 +87,6 @@ userSchema.pre<UserDocument>("save", async function (next) {
   return next();
 });
 
-const User = model("User", userSchema);
+const User = model<UserDocument>("User", userSchema);
 
 export default User;
