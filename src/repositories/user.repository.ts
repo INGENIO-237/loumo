@@ -8,6 +8,10 @@ export default class UserRepository {
     return await User.find().select("-password -__v");
   }
 
+  async getUser({ id, email}: { id?: string; email?: string }) {
+    return await User.findOne({ _id: id, email });
+  }
+
   async createUser(user: CreateUserInput["body"]) {
     return User.create(user).then(async (createdUser) => {
       const user = await User.findById(createdUser._id.toString()).select(

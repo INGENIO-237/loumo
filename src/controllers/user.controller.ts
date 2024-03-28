@@ -15,6 +15,18 @@ export default class UserController {
     return res.status(HTTP.OK).json(users);
   }
 
+  async getUser(
+    req: Request<{ email?: string; user?: string }>,
+    res: Response
+  ) {
+    const user = await this.service.getUser({
+      id: req.params.user,
+      email: req.params.email,
+    });
+
+    return res.status(HTTP.OK).json(user);
+  }
+
   async createUser(
     req: Request<{}, {}, CreateUserInput["body"]>,
     res: Response
