@@ -15,3 +15,11 @@ export function tryCatch(handler: Function) {
 export function logError(error: BaseError) {
   logger.error(error);
 }
+
+export function schemaValidationErrorParser(validationError: any) {
+  const errors = [...validationError.errors];
+
+  return errors.map((error) => {
+    return { message: error.message };
+  });
+}
