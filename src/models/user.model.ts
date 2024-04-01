@@ -24,6 +24,7 @@ export interface UserDocument extends Document {
   shippingAddresses?: ShippingAddress[] | [];
   createdAt: Date;
   updatedAt: Date;
+  comparePassword(candidate: string): Promise<boolean>;
 }
 
 const userSchema = new Schema(
@@ -72,11 +73,9 @@ const userSchema = new Schema(
 userSchema.pre<UserDocument>("save", async function (next) {
   const user = this;
 
-  if(!user.isModified("password")) return next();
+  if (!user.isModified("password")) return next();
 
   const salt = await bcrypt.genSalt(config.SALT_FACTOR);
-
-  console.log({ salt });
 
   const hash = await bcrypt.hash(user.password, salt);
 
@@ -86,6 +85,12 @@ userSchema.pre<UserDocument>("save", async function (next) {
 
   return next();
 });
+
+userSchema.methods.comparePassword = async function (candidate: string) {
+  const user = this as UserDocument;
+
+  return await bcrypt.compare(candidate, user.password).catch((e) => false);
+};
 
 const User = model<UserDocument>("User", userSchema);
 

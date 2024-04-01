@@ -1,5 +1,5 @@
 import { Service } from "typedi";
-import User from "../models/user.model";
+import User, { UserDocument } from "../models/user.model";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
 
 @Service()
@@ -9,7 +9,7 @@ export default class UserRepository {
   }
 
   async getUser({ id, email}: { id?: string; email?: string }) {
-    return await User.findOne({ _id: id, email });
+    return await User.findOne<UserDocument>({ _id: id, email });
   }
 
   async createUser(user: CreateUserInput["body"]) {
