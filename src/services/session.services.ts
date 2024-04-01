@@ -4,6 +4,7 @@ import { CreateSessionInput } from "../schemas/session.schemas";
 import UserService from "./user.services";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../constants/http.responses";
+import { signJwt } from "../utils/jwt.utils";
 
 @Service()
 export default class SessionService {
@@ -12,11 +13,17 @@ export default class SessionService {
     private userService: UserService
   ) {}
 
-  async createSession({ email, password }: CreateSessionInput["body"]) {
+  async createSession({
+    email,
+    password,
+    userAgent,
+    ip,
+  }: CreateSessionInput["body"] & { userAgent: string; ip: string }) {
     // Ensure if user's registered or not
     const user = await this.userService.getUser({ email });
 
-    if (!user) throw new ApiError("User does not exist", HTTP.BAD_REQUEST);
+    if (!user)
+      throw new ApiError("Unregistered email address", HTTP.BAD_REQUEST);
 
     // Validate user's password
     const passwordIsCorrect = await user.comparePassword(password);
@@ -24,6 +31,17 @@ export default class SessionService {
     if (!passwordIsCorrect)
       throw new ApiError("Incorrect password", HTTP.BAD_REQUEST);
 
-    this.repository.createSession();
+    const session = await this.repository.createSession({
+      user: user._id,
+      userAgent,
+      ip,
+    });
+
+    // Sign session (Access token & Refresh token)
+    const accessToken = signJwt(session);
+    const refreshToken = signJwt(session, true);
+
+    // Return back tokens
+    return { accessToken, refreshToken };
   }
 }
