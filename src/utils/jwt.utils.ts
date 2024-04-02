@@ -35,8 +35,8 @@ export function verifyJwt(token: string, isRefreshToken = false) {
     );
 
     return { decoded, valid: true, expired: false };
-  } catch (error) {
-    logger.error(error);
+  } catch (error: any) {
+    logger.error(error.toString());
     return { expired: true, valid: false, decoded: null };
   }
 }

@@ -2,7 +2,7 @@ import express from "express";
 import connectToDatabase from "./db";
 import router from "../router";
 import errorHandler from "../utils/errors/errors.handler";
-import { isAuthenticated } from "../middlewares/session";
+import { deserializeUser } from "../middlewares/session";
 
 export default function createServer() {
   const server = express();
@@ -10,7 +10,7 @@ export default function createServer() {
   connectToDatabase();
 
   server.use(express.json());
-  server.use(isAuthenticated);
+  server.use(deserializeUser);
 
   router(server);
 

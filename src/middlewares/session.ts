@@ -3,7 +3,7 @@ import { reIssueAccessToken, verifyJwt } from "../utils/jwt.utils";
 import { JwtPayload } from "jsonwebtoken";
 import HTTP from "../constants/http.responses";
 
-export function isAuthenticated(
+export function deserializeUser(
   req: Request,
   res: Response,
   next: NextFunction
@@ -41,6 +41,8 @@ export function isAuthenticated(
     const newAccessToken = reIssueAccessToken(session);
 
     res.setHeader("x-access-token", newAccessToken);
+
+    res.locals.user = session.user;
 
     return next();
   } else {
