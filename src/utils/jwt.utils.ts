@@ -40,3 +40,7 @@ export function verifyJwt(token: string, isRefreshToken = false) {
     return { expired: true, valid: false, decoded: null };
   }
 }
+
+export function reIssueAccessToken(payload: object) {
+  return signJwt(payload);
+}
