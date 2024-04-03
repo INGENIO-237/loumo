@@ -21,6 +21,7 @@ export interface UserDocument extends Document {
   email: string;
   phone?: Phone;
   password: string;
+  isActive: boolean;
   shippingAddresses?: ShippingAddress[] | [];
   createdAt: Date;
   updatedAt: Date;

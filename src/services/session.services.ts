@@ -22,9 +22,6 @@ export default class SessionService {
     // Ensure if user's registered or not
     const user = await this.userService.getUser({ email });
 
-    if (!user)
-      throw new ApiError("Unregistered email address", HTTP.BAD_REQUEST);
-
     // Validate user's password
     const passwordIsCorrect = await user.comparePassword(password);
 

@@ -15,7 +15,13 @@ export default class UserService {
   async getUser({ id, email }: { id?: string; email?: string }) {
     const user = await this.repository.getUser({ id, email });
 
-    if (!user) throw new ApiError("User Not Found", HTTP.NOT_FOUND);
+    if (!user) {
+      if (email) {
+        throw new ApiError("Unregistered email address", HTTP.NOT_FOUND);
+      } else {
+        throw new ApiError("User Not Found", HTTP.NOT_FOUND);
+      }
+    }
 
     return user;
   }
