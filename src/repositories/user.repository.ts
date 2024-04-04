@@ -10,7 +10,7 @@ export default class UserRepository {
 
   async getUser({ id, email }: { id?: string; email?: string }) {
     return id
-      ? await User.findOne<UserDocument>({ _id: id })
+      ? await User.findOne<UserDocument>({ _id: id }).select("-password -__v")
       : email
       ? await User.findOne<UserDocument>({ email })
       : null;
