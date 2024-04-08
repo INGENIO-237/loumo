@@ -10,3 +10,13 @@ export const createSessionSchema = object({
 });
 
 export type CreateSessionInput = z.infer<typeof createSessionSchema>;
+
+export const forgotPasswordSchema = object({
+  body: object({
+    email: string({ required_error: "Email is required" }).email(
+      "Invalid email format"
+    ),
+  }),
+});
+
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;

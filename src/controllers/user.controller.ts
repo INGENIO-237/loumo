@@ -2,7 +2,7 @@ import { Service } from "typedi";
 import UserService from "../services/user.services";
 import { Request, Response } from "express";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
-import HTTP from "../constants/http.responses";
+import HTTP from "../utils/constants/http.responses";
 import ApiError from "../utils/errors/errors.base";
 
 @Service()
