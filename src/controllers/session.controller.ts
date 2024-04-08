@@ -1,7 +1,10 @@
 import { Service } from "typedi";
 import SessionService from "../services/session.services";
 import { Request, Response } from "express";
-import { CreateSessionInput } from "../schemas/session.schemas";
+import {
+  CreateSessionInput,
+  ForgotPasswordInput,
+} from "../schemas/session.schemas";
 import UserService from "../services/user.services";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
@@ -33,13 +36,25 @@ export default class SessionController {
 
   async getCurrentUser(req: Request, res: Response) {
     const user = await this.userService.getUser({ id: res.locals.user });
-    
+
     if (!user) throw new ApiError("User not found", HTTP.NOT_FOUND);
 
     return res.status(HTTP.OK).json(user);
   }
 
-  async forgotPassword(req: Request, res: Response){
-    
+  async forgotPassword(
+    req: Request<{}, {}, ForgotPasswordInput["body"]>,
+    res: Response
+  ) {
+    const { email } = req.body;
+
+    await this.service.forgotPassword({ email });
+
+    return res
+      .status(HTTP.OK)
+      .json({
+        message:
+          "An OTP code has been sent to your email address. Check it please.",
+      });
   }
 }

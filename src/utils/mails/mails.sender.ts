@@ -4,27 +4,22 @@ import logger from "../logger";
 import MailTransporter from "./mails.config";
 import MAIL_TEMPLATES from "./mails.templates";
 
-interface MailExtraData {
+interface MailData {
+  receiver: string;
   otp?: number | string;
 }
 
-export default function sendMail(
-  action: string,
-  receiver: string,
-  ...data: (string | number)[]
-) {
-  const mailData = { ...data };
+export default function sendMail(action: string, data: MailData) {
+  const { receiver } = data;
 
-  const template = getCorrespondingMailTemplate(
-    action,
-    mailData as MailExtraData
-  );
+  const template = getCorrespondingMailTemplate(action, data);
 
   MailTransporter.sendMail(
     {
       from: config.MAIL_SENDER + " " + config.MAIL_USER,
       to: receiver,
       html: template,
+      subject: MAIL_ACTIONS.OTP_CODE,
     },
     (error, info) => {
       if (error) {
@@ -36,7 +31,7 @@ export default function sendMail(
   );
 }
 
-function getCorrespondingMailTemplate(action: string, mailData: MailExtraData) {
+function getCorrespondingMailTemplate(action: string, mailData: MailData) {
   switch (action) {
     case MAIL_ACTIONS.OTP_CODE:
       return MAIL_TEMPLATES.OTP(mailData.otp as string);

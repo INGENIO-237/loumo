@@ -6,9 +6,9 @@ import MAIL_ACTIONS from "../utils/constants/mail.actions";
 const UsersHooks = new EventEmitter();
 
 UsersHooks.on(
-  USER_HOOK_ACTIONS.FORGOT_PWD,
+  USER_HOOK_ACTIONS.OTP_CODE,
   ({ receiver, otp }: { receiver: string; otp: string | number }) => {
-    sendMail(MAIL_ACTIONS.OTP_CODE, receiver, otp);
+    sendMail(MAIL_ACTIONS.OTP_CODE, { receiver, otp });
   }
 );
 

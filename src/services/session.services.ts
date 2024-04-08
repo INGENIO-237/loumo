@@ -5,6 +5,10 @@ import UserService from "./user.services";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
 import { signJwt } from "../utils/jwt.utils";
+import generateOtp from "../utils/otp";
+import { UserDocument } from "../models/user.model";
+import { UsersHooks } from "../hooks";
+import { USER_HOOK_ACTIONS } from "../utils/constants/hooks.actions";
 
 @Service()
 export default class SessionService {
@@ -43,11 +47,17 @@ export default class SessionService {
   }
 
   async forgotPassword({ email }: { email: string }) {
-    // Will a 404 error if not found
-    await this.userService.getUser({ email });
+    // Will throw a 404 error if not found
+    const user = await this.userService.getUser({ email });
 
-    // Generate OTP Code
-    // Email forgor pwd event
-    // Send back 200 response
+    await this.otpSender(user);
+  }
+
+  private async otpSender(user: UserDocument) {
+    const otp = generateOtp();
+
+    await this.userService.updateUser(user._id.toString(), { otp });
+
+    UsersHooks.emit(USER_HOOK_ACTIONS.OTP_CODE, { receiver: user.email, otp });
   }
 }
