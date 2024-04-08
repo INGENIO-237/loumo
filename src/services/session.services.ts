@@ -41,4 +41,8 @@ export default class SessionService {
     // Return back tokens
     return { accessToken, refreshToken };
   }
+
+  async forgotPassword({ email }: { email: string }) {
+    const user = await this.userService.getUser({ email });
+  }
 }

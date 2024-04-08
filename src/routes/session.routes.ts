@@ -15,6 +15,11 @@ SessionRouter.post(
   validate(createSessionSchema),
   tryCatch(controller.createSession.bind(controller))
 );
+SessionRouter.post(
+  "/forgot-password",
+  validate(createSessionSchema),
+  tryCatch(controller.createSession.bind(controller))
+);
 SessionRouter.get(
   "/current",
   isAuthenticated,

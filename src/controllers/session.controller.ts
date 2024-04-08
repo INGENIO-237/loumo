@@ -38,4 +38,8 @@ export default class SessionController {
 
     return res.status(HTTP.OK).json(user);
   }
+
+  async forgotPassword(req: Request, res: Response){
+    
+  }
 }
