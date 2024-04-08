@@ -8,17 +8,17 @@ interface MailExtraData {
   otp?: number | string;
 }
 
-export default function sendMail({
-  action,
-  receiver,
-  ...data
-}: {
-  action: string;
-  receiver: string;
-}) {
-  const mailData: MailExtraData = { ...data };
+export default function sendMail(
+  action: string,
+  receiver: string,
+  ...data: (string | number)[]
+) {
+  const mailData = { ...data };
 
-  const template = getCorrespondingMailTemplate(action, mailData);
+  const template = getCorrespondingMailTemplate(
+    action,
+    mailData as MailExtraData
+  );
 
   MailTransporter.sendMail(
     {

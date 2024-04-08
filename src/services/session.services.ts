@@ -43,6 +43,11 @@ export default class SessionService {
   }
 
   async forgotPassword({ email }: { email: string }) {
-    const user = await this.userService.getUser({ email });
+    // Will a 404 error if not found
+    await this.userService.getUser({ email });
+
+    // Generate OTP Code
+    // Email forgor pwd event
+    // Send back 200 response
   }
 }

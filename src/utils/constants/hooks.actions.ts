@@ -1,0 +1,3 @@
+export const USER_HOOK_ACTIONS = {
+    FORGOT_PWD: "FORGOT-PWD"
+}
