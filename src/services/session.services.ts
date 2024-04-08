@@ -3,7 +3,7 @@ import SessionRepository from "../repositories/session.repository";
 import { CreateSessionInput } from "../schemas/session.schemas";
 import UserService from "./user.services";
 import ApiError from "../utils/errors/errors.base";
-import HTTP from "../constants/http.responses";
+import HTTP from "../utils/constants/http.responses";
 import { signJwt } from "../utils/jwt.utils";
 
 @Service()

@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import { CreateSessionInput } from "../schemas/session.schemas";
 import UserService from "../services/user.services";
 import ApiError from "../utils/errors/errors.base";
-import HTTP from "../constants/http.responses";
+import HTTP from "../utils/constants/http.responses";
 
 @Service()
 export default class SessionController {

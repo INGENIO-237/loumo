@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { reIssueAccessToken, verifyJwt } from "../utils/jwt.utils";
 import { JwtPayload } from "jsonwebtoken";
-import HTTP from "../constants/http.responses";
+import HTTP from "../utils/constants/http.responses";
 
 export function deserializeUser(
   req: Request,

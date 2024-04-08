@@ -2,7 +2,7 @@ import { Service } from "typedi";
 import UserRepository from "../repositories/user.repository";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
 import ApiError from "../utils/errors/errors.base";
-import HTTP from "../constants/http.responses";
+import HTTP from "../utils/constants/http.responses";
 
 @Service()
 export default class UserService {

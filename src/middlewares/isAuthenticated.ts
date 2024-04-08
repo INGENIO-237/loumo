@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import HTTP from "../constants/http.responses";
+import HTTP from "../utils/constants/http.responses";
 
 export default function isAuthenticated(
   req: Request,
