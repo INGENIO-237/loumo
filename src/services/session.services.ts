@@ -8,16 +8,14 @@ import UserService from "./user.services";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
 import { signJwt } from "../utils/jwt.utils";
-import generateOtp from "../utils/otp";
-import { UserDocument } from "../models/user.model";
-import { UsersHooks } from "../hooks";
-import { USER_HOOK_ACTIONS } from "../utils/constants/hooks.actions";
+import OtpService from "./otp.services";
 
 @Service()
 export default class SessionService {
   constructor(
     private repository: SessionRepository,
-    private userService: UserService
+    private userService: UserService,
+    private otpService: OtpService
   ) {}
 
   async createSession({
@@ -53,7 +51,7 @@ export default class SessionService {
     // Will throw a 404 error if not found
     const user = await this.userService.getUser({ email });
 
-    await this.otpSender(user);
+    await this.otpService.sendOtp(user);
   }
 
   async forgotPasswordConfirm({
@@ -70,13 +68,5 @@ export default class SessionService {
       );
 
     await this.userService.updateUser(user._id.toString(), { password });
-  }
-
-  private async otpSender(user: UserDocument) {
-    const otp = generateOtp();
-
-    await this.userService.updateUser(user._id.toString(), { otp });
-
-    UsersHooks.emit(USER_HOOK_ACTIONS.OTP_CODE, { receiver: user.email, otp });
   }
 }
