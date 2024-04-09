@@ -21,13 +21,14 @@ export default class SessionController {
     req: Request<{}, {}, CreateSessionInput["body"]>,
     res: Response
   ) {
-    const { email, password } = req.body;
+    const { email, password, otp } = req.body;
     const userAgent = req.headers["user-agent"] || "";
     const ip = req.ip || "";
 
     const { accessToken, refreshToken } = await this.service.createSession({
       email,
       password,
+      otp,
       userAgent,
       ip,
     });

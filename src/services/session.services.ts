@@ -22,11 +22,33 @@ export default class SessionService {
   async createSession({
     email,
     password,
+    otp,
     userAgent,
     ip,
   }: CreateSessionInput["body"] & { userAgent: string; ip: string }) {
     // Ensure if user's registered or not
     const user = await this.userService.getUser({ email });
+
+    // Validate OTP
+    if (otp) {
+      if (user.otp !== otp)
+        throw new ApiError(
+          "Invalid OTP Code. Retry or ask for a new one",
+          HTTP.BAD_REQUEST
+        );
+
+      user.isVerified = true;
+      user.save();
+    } else {
+      // Ensure user is verified before pursuing
+      const isVerified = await this.ensureUserIsVerified(user);
+
+      if (!isVerified)
+        throw new ApiError(
+          "An OTP code has been sent to your email address to verify your account. Please check it.",
+          HTTP.ACCEPTED
+        );
+    }
 
     // Validate user's password
     const passwordIsCorrect = await user.comparePassword(password);
@@ -40,20 +62,10 @@ export default class SessionService {
       ip,
     });
 
-    // Ensure user is verified before pursuing
-    const isVerified = await this.ensureUserIsVerified(user);
-
-    if (!isVerified)
-      throw new ApiError(
-        "An OTP code has been sent to your email address to verify your account. Please check it.",
-        HTTP.ACCEPTED
-      );
-
     // Sign session (Access token & Refresh token)
     const accessToken = signJwt(session);
     const refreshToken = signJwt(session, true);
 
-    // Return back tokens
     return { accessToken, refreshToken };
   }
 

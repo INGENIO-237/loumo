@@ -1,4 +1,4 @@
-import { number, object, string, z } from "zod";
+import { number, object, optional, string, z } from "zod";
 
 export const createSessionSchema = object({
   body: object({
@@ -6,6 +6,7 @@ export const createSessionSchema = object({
       "Invalid email format"
     ),
     password: string({ required_error: "Password is required" }),
+    otp: optional(number({ invalid_type_error: "OTP must be a number" })),
   }),
 });
 
