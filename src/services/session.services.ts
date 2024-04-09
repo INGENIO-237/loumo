@@ -1,6 +1,9 @@
 import { Service } from "typedi";
 import SessionRepository from "../repositories/session.repository";
-import { CreateSessionInput } from "../schemas/session.schemas";
+import {
+  CreateSessionInput,
+  ForgotPasswordConfirmInput,
+} from "../schemas/session.schemas";
 import UserService from "./user.services";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
@@ -51,6 +54,22 @@ export default class SessionService {
     const user = await this.userService.getUser({ email });
 
     await this.otpSender(user);
+  }
+
+  async forgotPasswordConfirm({
+    email,
+    otp,
+    password,
+  }: ForgotPasswordConfirmInput["body"]) {
+    const user = await this.userService.getUser({ email });
+
+    if (user.otp !== otp)
+      throw new ApiError(
+        "Invalid OTP Code. Retry or ask for a new one",
+        HTTP.BAD_REQUEST
+      );
+
+    await this.userService.updateUser(user._id.toString(), { password });
   }
 
   private async otpSender(user: UserDocument) {

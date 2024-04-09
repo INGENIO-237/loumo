@@ -3,6 +3,7 @@ import SessionService from "../services/session.services";
 import { Request, Response } from "express";
 import {
   CreateSessionInput,
+  ForgotPasswordConfirmInput,
   ForgotPasswordInput,
 } from "../schemas/session.schemas";
 import UserService from "../services/user.services";
@@ -56,5 +57,11 @@ export default class SessionController {
         message:
           "An OTP code has been sent to your email address. Check it please.",
       });
+  }
+
+  async forgotPasswordConfirm(req: Request<{},{}, ForgotPasswordConfirmInput['body']>, res: Response){
+    await this.service.forgotPasswordConfirm(req.body);
+    
+    return res.sendStatus(HTTP.OK)
   }
 }

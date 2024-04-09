@@ -5,6 +5,7 @@ import SessionController from "../controllers/session.controller";
 import validate from "../middlewares/validate.request";
 import {
   createSessionSchema,
+  forgotPasswordConfirmSchema,
   forgotPasswordSchema,
 } from "../schemas/session.schemas";
 import { tryCatch } from "../utils/errors/errors.utils";
@@ -21,6 +22,11 @@ SessionRouter.post(
 SessionRouter.post(
   "/forgot-password",
   validate(forgotPasswordSchema),
+  tryCatch(controller.forgotPassword.bind(controller))
+);
+SessionRouter.post(
+  "/forgot-password-confirm",
+  validate(forgotPasswordConfirmSchema),
   tryCatch(controller.forgotPassword.bind(controller))
 );
 SessionRouter.get(
