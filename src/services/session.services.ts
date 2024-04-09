@@ -9,6 +9,7 @@ import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
 import { signJwt } from "../utils/jwt.utils";
 import OtpService from "./otp.services";
+import { UserDocument } from "../models/user.model";
 
 @Service()
 export default class SessionService {
@@ -39,6 +40,15 @@ export default class SessionService {
       ip,
     });
 
+    // Ensure user is verified before pursuing
+    const isVerified = await this.ensureUserIsVerified(user);
+
+    if (!isVerified)
+      throw new ApiError(
+        "An OTP code has been sent to your email address to verify your account. Please check it.",
+        HTTP.ACCEPTED
+      );
+
     // Sign session (Access token & Refresh token)
     const accessToken = signJwt(session);
     const refreshToken = signJwt(session, true);
@@ -68,5 +78,15 @@ export default class SessionService {
       );
 
     await this.userService.updateUser(user._id.toString(), { password });
+  }
+
+  async ensureUserIsVerified(user: UserDocument) {
+    const { isVerified } = user;
+    if (isVerified) return isVerified;
+
+    // Send otp code for email verification
+    await this.otpService.sendOtp(user);
+
+    return false;
   }
 }
