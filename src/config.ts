@@ -18,5 +18,10 @@ export default {
   MAIL_PORT: process.env.MAIL_PORT ? process.env.MAIL_PORT : 465,
   MAIL_USER: process.env.MAIL_USER,
   MAIL_PWD: process.env.MAIL_PWD,
-  MAIL_SENDER: process.env.MAIL_SENDER
+  MAIL_SENDER: process.env.MAIL_SENDER,
+
+  // Cloudinary
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  CLOUDINARY_API_CLOUD_NAME: process.env.CLOUDINARY_API_CLOUD_NAME,
 };
