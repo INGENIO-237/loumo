@@ -10,7 +10,7 @@ export default function createServer() {
 
   connectToDatabase();
 
-  server.use(cors())
+  server.use(cors());
 
   server.use(express.json());
   server.use(deserializeUser);
