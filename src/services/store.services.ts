@@ -6,7 +6,7 @@ import { CreateStoreInput } from "../schemas/store.schemas";
 export default class StoreService {
   constructor(private repository: StoreRepository) {}
 
-  async createStore(store: CreateStoreInput["body"] & { user: string }) {
+  async createStore(store: CreateStoreInput) {
     return await this.repository.createStore(store);
   }
 }

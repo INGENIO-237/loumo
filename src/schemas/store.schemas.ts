@@ -10,4 +10,9 @@ export const createStoreSchema = object({
   }),
 });
 
-export type CreateStoreInput = z.infer<typeof createStoreSchema>;
+export type CreateStoreInput = {
+  user: string;
+  name: string;
+  logo?: string;
+  bannerImage: string;
+};
