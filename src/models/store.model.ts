@@ -1,11 +1,16 @@
 import { Document, Schema, Types, model } from "mongoose";
 import { UserDocument } from "./user.model";
 
+export type CloudinaryImage = {
+  url: string;
+  publicId: string;
+}
+
 export interface StoreDocument extends Document {
   user: UserDocument["_id"];
   name: string;
-  logo: string;
-  bannerImage: string;
+  logo: CloudinaryImage;
+  bannerImage: CloudinaryImage;
   createdAt: Date;
   updateAt: Date;
 }
@@ -20,8 +25,18 @@ const storeSchema = new Schema(
       type: String,
       required: true,
     },
-    logo: String,
-    bannerImage: String,
+    logo: {
+      type: {
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
+      },
+    },
+    bannerImage: {
+      type: {
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
+      },
+    },
   },
   { timestamps: true }
 );

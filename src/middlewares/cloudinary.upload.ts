@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { v2 as cloudinary } from "cloudinary";
-import logger from "../utils/logger";
-import fs from "node:fs";
+import { uploader } from "../utils/cloudinary.utils";
 
 export default async function uploadToCloudinary(
   req: Request,
@@ -33,21 +31,3 @@ export default async function uploadToCloudinary(
   }
 }
 
-async function uploader(req: Request, file: Express.Multer.File) {
-  try {
-    const result = await cloudinary.uploader.upload(file.path, {
-      use_filename: true,
-      unique_filename: false,
-      overwrite: true,
-    });
-    
-    req.body[file.fieldname] = result.secure_url;
-
-    fs.unlink(file.path, (error) => {
-      if (error) logger.error(error);
-    });
-  } catch (error) {
-    logger.error(error);
-    throw error;
-  }
-}
