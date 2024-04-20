@@ -3,6 +3,7 @@ import UserRepository from "../repositories/user.repository";
 import { CreateUserInput, UpdateUserInput } from "../schemas/user.schemas";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
+import hashPassword from "../utils/hash-pwd";
 
 @Service()
 export default class UserService {
@@ -36,7 +37,10 @@ export default class UserService {
       | UpdateUserInput["body"]
       | (UpdateUserInput["body"] & { isVerified?: boolean; otp?: number })
   ) {
-    this.getUser({ id: userId });
+    await this.getUser({ id: userId });
+
+    if(user.password) user.password = await hashPassword(user.password as string)
+      
     await this.repository.updateUser(userId, user);
   }
 }

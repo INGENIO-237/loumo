@@ -27,7 +27,7 @@ SessionRouter.post(
 SessionRouter.post(
   "/forgot-password-confirm",
   validate(forgotPasswordConfirmSchema),
-  tryCatch(controller.forgotPassword.bind(controller))
+  tryCatch(controller.forgotPasswordConfirm.bind(controller))
 );
 SessionRouter.get(
   "/current",
