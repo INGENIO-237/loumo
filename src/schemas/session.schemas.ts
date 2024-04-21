@@ -24,14 +24,18 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
 export const forgotPasswordConfirmSchema = object({
   body: object({
-    email: string({ required_error: "Email is required" }).email(
-      "Invalid email format"
-    ),
+    email: string({
+      required_error: "Email is required",
+      invalid_type_error: "Email must be a string",
+    }).email("Invalid email format"),
     otp: number({
       required_error: "OTP code is required",
       invalid_type_error: "OTP must be a number",
     }),
-    password: string({ required_error: "Password is required" }),
+    password: string({
+      required_error: "Password is required",
+      invalid_type_error: "Password must be a string",
+    }),
   }),
 });
 

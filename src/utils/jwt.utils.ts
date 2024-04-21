@@ -1,5 +1,4 @@
-import jwt, { SignOptions } from "jsonwebtoken";
-import { SessionDocument } from "../models/session.model";
+import jwt from "jsonwebtoken";
 import config from "../config";
 import logger from "./logger";
 
