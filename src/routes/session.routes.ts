@@ -7,6 +7,7 @@ import {
   createSessionSchema,
   forgotPasswordConfirmSchema,
   forgotPasswordSchema,
+  // resendOtpSchema,
 } from "../schemas/session.schemas";
 import { tryCatch } from "../utils/errors/errors.utils";
 import isAuthenticated from "../middlewares/isAuthenticated";
@@ -34,5 +35,10 @@ SessionRouter.get(
   isAuthenticated,
   tryCatch(controller.getCurrentUser.bind(controller))
 );
+// SessionRouter.post(
+//   "/resend-otp",
+//   validate(resendOtpSchema),
+//   tryCatch(controller.resendOtp.bind(controller))
+// );
 
 export default SessionRouter;

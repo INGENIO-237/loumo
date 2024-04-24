@@ -42,3 +42,14 @@ export const forgotPasswordConfirmSchema = object({
 export type ForgotPasswordConfirmInput = z.infer<
   typeof forgotPasswordConfirmSchema
 >;
+
+// export const resendOtpSchema = object({
+//   body: object({
+//     email: string({
+//       required_error: "Email is required",
+//       invalid_type_error: "Email must be a string",
+//     }).email("Invalid email format"),
+//   }),
+// });
+
+// export type ResendOtpInput = z.infer<typeof resendOtpSchema>

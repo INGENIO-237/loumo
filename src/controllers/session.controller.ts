@@ -5,6 +5,7 @@ import {
   CreateSessionInput,
   ForgotPasswordConfirmInput,
   ForgotPasswordInput,
+  // ResendOtpInput,
 } from "../schemas/session.schemas";
 import UserService from "../services/user.services";
 import ApiError from "../utils/errors/errors.base";
@@ -52,17 +53,22 @@ export default class SessionController {
 
     await this.service.forgotPassword({ email });
 
-    return res
-      .status(HTTP.OK)
-      .json({
-        message:
-          "An OTP code has been sent to your email address. Check it please.",
-      });
+    return res.status(HTTP.OK).json({
+      message:
+        "An OTP code has been sent to your email address. Check it please.",
+    });
   }
 
-  async forgotPasswordConfirm(req: Request<{},{}, ForgotPasswordConfirmInput['body']>, res: Response){
+  async forgotPasswordConfirm(
+    req: Request<{}, {}, ForgotPasswordConfirmInput["body"]>,
+    res: Response
+  ) {
     await this.service.forgotPasswordConfirm(req.body);
-    
-    return res.sendStatus(HTTP.OK)
+
+    return res.sendStatus(HTTP.OK);
   }
+
+  // async resendOtp(req: Request<{}, {}, ResendOtpInput["body"]>, res: Response) {
+  //   await this.forgotPassword(req, res);
+  // }
 }
