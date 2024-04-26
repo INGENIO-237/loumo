@@ -2,28 +2,21 @@ import { Document, Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import config from "../config";
 
-type Phone = {
-  country: {
-    code: number;
-    name: string;
-    shortName: string;
-  };
-  value: number;
-};
-
 type ShippingAddress = {
-  street: string;
-  city: string;
-  country: string;
+  location: string;
+  coords: {
+    lat: number;
+    lng: number;
+  };
 };
 
 export interface UserDocument extends Document {
   email: string;
-  phone?: Phone;
+  phone?: number;
   password: string;
   isVerified: boolean;
   otp: number;
-  shippingAddresses?: ShippingAddress[] | [];
+  shippingAddress?: ShippingAddress;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -37,29 +30,21 @@ const userSchema = new Schema(
       required: true,
     },
     phone: {
-      type: {
-        country: {
-          code: Number,
-          name: String,
-          shortName: String,
-        },
-        value: Number,
-      },
+      type: Number,
       index: { unique: true, sparse: true },
     },
     password: {
       type: String,
       required: true,
     },
-    shippingAddresses: {
-      type: [
-        {
-          street: String,
-          city: String,
-          country: String,
+    shippingAddress: {
+      type: {
+        location: String,
+        coords: {
+          lat: Number,
+          lng: Number,
         },
-      ],
-      default: [],
+      },
     },
     isVerified: {
       type: Boolean,
