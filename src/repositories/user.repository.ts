@@ -22,7 +22,9 @@ export default class UserRepository {
       : email
       ? await User.findOne<UserDocument>({ email })
       : phone
-      ? await User.findOne<UserDocument>({ phone }).select("-password -__v -otp")
+      ? await User.findOne<UserDocument>({ phone }).select(
+          "-password -__v -otp"
+        )
       : null;
   }
 
@@ -43,5 +45,9 @@ export default class UserRepository {
       | (UpdateUserInput["body"] & { isVerified?: boolean; otp?: number })
   ) {
     await User.findByIdAndUpdate(userId, user);
+  }
+
+  async becomeMerchant(userId: string) {
+    await User.findByIdAndUpdate(userId, { isMerchant: true });
   }
 }
