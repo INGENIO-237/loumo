@@ -25,7 +25,7 @@ export default class UserService {
     phone?: string;
     throwExpection?: boolean;
   }) {
-    const user = await this.repository.getUser({ id, email });
+    const user = await this.repository.getUser({ id, email, phone });
 
     if (throwExpection) {
       if (!user) {
