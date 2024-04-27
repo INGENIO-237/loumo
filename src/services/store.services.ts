@@ -3,8 +3,8 @@ import StoreRepository from "../repositories/store.repository";
 import { CreateStoreInput, UpdateStoreInput } from "../schemas/store.schemas";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
-import { v2 as cloudinary } from "cloudinary";
 import { deleteImage } from "../utils/cloudinary.utils";
+import COMMON_MSG from "../utils/constants/common.msgs";
 
 @Service()
 export default class StoreService {
@@ -17,7 +17,7 @@ export default class StoreService {
   private async getStore(storeId: string) {
     const store = await this.repository.getStore(storeId);
 
-    if (!store) throw new ApiError("Store Not Found", HTTP.NOT_FOUND);
+    if (!store) throw new ApiError(COMMON_MSG.notFound("Store"), HTTP.NOT_FOUND);
 
     return store;
   }

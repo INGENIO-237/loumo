@@ -10,6 +10,7 @@ import HTTP from "../utils/constants/http.responses";
 import { signJwt } from "../utils/jwt.utils";
 import OtpService from "./otp.services";
 import { UserDocument } from "../models/user.model";
+import COMMON_MSG from "../utils/constants/common.msgs";
 
 @Service()
 export default class SessionService {
@@ -27,16 +28,16 @@ export default class SessionService {
     ip,
   }: CreateSessionInput["body"] & { userAgent: string; ip: string }) {
     // Ensure if user's registered or not
-    const user = await this.userService.getUser({ email }) as UserDocument;
+    const user = (await this.userService.getUser({ email })) as UserDocument;
 
     if (user.hasBeenDeleted)
-      throw new ApiError("Unregistered email address", HTTP.NOT_FOUND);
+      throw new ApiError(COMMON_MSG.unregistered("email address"), HTTP.NOT_FOUND);
 
     // Validate OTP
     if (otp) {
       if (user.otp !== otp)
         throw new ApiError(
-          "Invalid OTP Code. Retry or ask for a new one",
+          COMMON_MSG.invalid("OTP Code"),
           HTTP.BAD_REQUEST
         );
 
@@ -48,7 +49,7 @@ export default class SessionService {
 
       if (!isVerified)
         throw new ApiError(
-          "An OTP code has been sent to your email address to verify your account. Please check it.",
+          COMMON_MSG.otpSent(),
           HTTP.ACCEPTED
         );
     }
@@ -74,10 +75,13 @@ export default class SessionService {
 
   async forgotPassword({ email }: { email: string }) {
     // Will throw a 404 error if not found
-    const user = await this.userService.getUser({ email }) as UserDocument;
+    const user = (await this.userService.getUser({ email })) as UserDocument;
 
     if (user.hasBeenDeleted)
-      throw new ApiError("Unregistered email address", HTTP.NOT_FOUND);
+      throw new ApiError(
+        COMMON_MSG.unregistered("email address"),
+        HTTP.NOT_FOUND
+      );
 
     await this.otpService.sendOtp(user);
   }
@@ -87,13 +91,10 @@ export default class SessionService {
     otp,
     password,
   }: ForgotPasswordConfirmInput["body"]) {
-    const user = await this.userService.getUser({ email }) as UserDocument;
+    const user = (await this.userService.getUser({ email })) as UserDocument;
 
     if (user.otp !== otp)
-      throw new ApiError(
-        "Invalid OTP Code. Retry or ask for a new one",
-        HTTP.BAD_REQUEST
-      );
+      throw new ApiError(COMMON_MSG.invalid("OTP Code"), HTTP.BAD_REQUEST);
 
     await this.userService.updateUser(user._id.toString(), { password });
   }

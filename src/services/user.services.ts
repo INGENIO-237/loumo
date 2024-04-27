@@ -5,6 +5,7 @@ import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
 import hashPassword from "../utils/hash-pwd";
 import { UserDocument } from "../models/user.model";
+import COMMON_MSG from "../utils/constants/common.msgs";
 
 @Service()
 export default class UserService {
@@ -68,7 +69,7 @@ export default class UserService {
       });
 
       if (existingUser && existingUser.email !== currentUser.email)
-        throw new ApiError("Email address already in use", HTTP.BAD_REQUEST);
+        throw new ApiError(COMMON_MSG.inUse("Email address"), HTTP.BAD_REQUEST);
     }
 
     // Make sure phone number is unique
@@ -79,10 +80,7 @@ export default class UserService {
       });
 
       if (existingPhoneNumber && currentUser._id != existingPhoneNumber._id)
-        throw new ApiError(
-          "Phone number already in use by another account",
-          HTTP.BAD_REQUEST
-        );
+        throw new ApiError(COMMON_MSG.inUse("Phone number"), HTTP.BAD_REQUEST);
     }
 
     if (user.password)
