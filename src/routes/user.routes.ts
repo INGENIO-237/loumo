@@ -3,7 +3,10 @@ import { Router } from "express";
 import Container from "typedi";
 import UserController from "../controllers/user.controller";
 import validate from "../middlewares/validate.request";
-import { createUserSchema, updateUserProfileSchema } from "../schemas/user.schemas";
+import {
+  createUserSchema,
+  updateUserProfileSchema,
+} from "../schemas/user.schemas";
 import { tryCatch } from "../utils/errors/errors.utils";
 import isAuthenticated from "../middlewares/isAuthenticated";
 
@@ -26,6 +29,11 @@ UsersRouter.put(
   isAuthenticated,
   validate(updateUserProfileSchema),
   tryCatch(controller.updateUserProfile.bind(controller))
+);
+UsersRouter.put(
+  "/become-merchant",
+  isAuthenticated,
+  tryCatch(controller.becomeMerchant.bind(controller))
 );
 
 export default UsersRouter;

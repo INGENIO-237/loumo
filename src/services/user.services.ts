@@ -88,4 +88,8 @@ export default class UserService {
 
     await this.repository.updateUser(userId, user);
   }
+
+  async becomeMerchant(userId: string){
+    await this.repository.becomeMerchant(userId);
+  }
 }

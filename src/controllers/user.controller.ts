@@ -55,4 +55,10 @@ export default class UserController {
 
     return res.sendStatus(HTTP.OK);
   }
+
+  async becomeMerchant(req: Request, res: Response) {
+    await this.service.becomeMerchant(res.locals.user);
+
+    return res.sendStatus(HTTP.OK);
+  }
 }
