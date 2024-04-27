@@ -17,6 +17,8 @@ export interface UserDocument extends Document {
   isVerified: boolean;
   otp: number;
   shippingAddress?: ShippingAddress;
+  isMerchant: boolean;
+  hasBeenDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -51,6 +53,14 @@ const userSchema = new Schema(
       default: false,
     },
     otp: Number,
+    isMerchant: {
+      type: Boolean,
+      default: false,
+    },
+    hasBeenDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
