@@ -27,7 +27,10 @@ export default class SessionService {
     ip,
   }: CreateSessionInput["body"] & { userAgent: string; ip: string }) {
     // Ensure if user's registered or not
-    const user = await this.userService.getUser({ email });
+    const user = await this.userService.getUser({ email }) as UserDocument;
+
+    if (user.hasBeenDeleted)
+      throw new ApiError("Unregistered email address", HTTP.NOT_FOUND);
 
     // Validate OTP
     if (otp) {
@@ -71,7 +74,10 @@ export default class SessionService {
 
   async forgotPassword({ email }: { email: string }) {
     // Will throw a 404 error if not found
-    const user = await this.userService.getUser({ email });
+    const user = await this.userService.getUser({ email }) as UserDocument;
+
+    if (user.hasBeenDeleted)
+      throw new ApiError("Unregistered email address", HTTP.NOT_FOUND);
 
     await this.otpService.sendOtp(user);
   }
@@ -81,7 +87,7 @@ export default class SessionService {
     otp,
     password,
   }: ForgotPasswordConfirmInput["body"]) {
-    const user = await this.userService.getUser({ email });
+    const user = await this.userService.getUser({ email }) as UserDocument;
 
     if (user.otp !== otp)
       throw new ApiError(
