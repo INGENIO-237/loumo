@@ -45,4 +45,14 @@ export default class UserController {
 
     return res.sendStatus(HTTP.OK);
   }
+
+  async updateUserProfile(
+    req: Request<{}, {}, UpdateUserInput["body"]>,
+    res: Response
+  ) {
+    const user = res.locals.user;
+    await this.service.updateUser(user, req.body);
+
+    return res.sendStatus(HTTP.OK);
+  }
 }

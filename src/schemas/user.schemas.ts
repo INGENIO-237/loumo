@@ -5,7 +5,7 @@ export const createUserSchema = object({
     email: string({ required_error: "Email is required" }).email(
       "Invalid email format"
     ),
-    phone: optional(number({ invalid_type_error: "Phone must be a number" })),
+    phone: optional(string({ invalid_type_error: "Invalid phone number" })),
     password: string({ required_error: "Password is required" }).min(
       6,
       "Password must be at least 6 chars long."
@@ -39,7 +39,7 @@ export const updateUserSchema = object({
   }),
   body: object({
     email: optional(string().email("Invalid email format")),
-    phone: optional(number({ invalid_type_error: "Phone must be a number" })),
+    phone: optional(string({ invalid_type_error: "Invalid phone number" })),
     password: optional(
       string().min(6, "Password must be at least 6 chars long.")
     ),
@@ -62,3 +62,30 @@ export const updateUserSchema = object({
 });
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+
+export const updateUserProfileSchema = object({
+  body: object({
+    email: optional(string().email("Invalid email format")),
+    phone: optional(string({ invalid_type_error: "Invalid phone number" })),
+    password: optional(
+      string().min(6, "Password must be at least 6 chars long.")
+    ),
+    shippingAddress: optional(
+      object({
+        location: string({
+          invalid_type_error: "Shipping Address location must be a string",
+        }),
+        coords: object({
+          lat: number({
+            invalid_type_error: "Shipping Address Latitude must be a number",
+          }),
+          lng: number({
+            invalid_type_error: "Shipping Address Longitude must be a number",
+          }),
+        }),
+      })
+    ),
+  }),
+});
+
+export type UpdateUserProfileInput = z.infer<typeof updateUserSchema>;
