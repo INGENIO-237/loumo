@@ -31,15 +31,15 @@ export default class SessionService {
     const user = (await this.userService.getUser({ email })) as UserDocument;
 
     if (user.hasBeenDeleted)
-      throw new ApiError(COMMON_MSG.unregistered("email address"), HTTP.NOT_FOUND);
+      throw new ApiError(
+        COMMON_MSG.unregistered("email address"),
+        HTTP.NOT_FOUND
+      );
 
     // Validate OTP
     if (otp) {
       if (user.otp !== otp)
-        throw new ApiError(
-          COMMON_MSG.invalid("OTP Code"),
-          HTTP.BAD_REQUEST
-        );
+        throw new ApiError(COMMON_MSG.invalid("OTP Code"), HTTP.BAD_REQUEST);
 
       user.isVerified = true;
       user.save();
@@ -48,10 +48,7 @@ export default class SessionService {
       const isVerified = await this.ensureUserIsVerified(user);
 
       if (!isVerified)
-        throw new ApiError(
-          COMMON_MSG.otpSent(),
-          HTTP.ACCEPTED
-        );
+        return { otpGenerated: true, accessToken: null, refreshToken: null };
     }
 
     // Validate user's password
@@ -70,7 +67,7 @@ export default class SessionService {
     const accessToken = signJwt(session);
     const refreshToken = signJwt(session, true);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, otpGenerated: false };
   }
 
   async forgotPassword({ email }: { email: string }) {

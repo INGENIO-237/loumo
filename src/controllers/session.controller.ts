@@ -26,15 +26,16 @@ export default class SessionController {
     const userAgent = req.headers["user-agent"] || "";
     const ip = req.ip || "";
 
-    const { accessToken, refreshToken } = await this.service.createSession({
-      email,
-      password,
-      otp,
-      userAgent,
-      ip,
-    });
+    const { accessToken, refreshToken, otpGenerated } =
+      await this.service.createSession({
+        email,
+        password,
+        otp,
+        userAgent,
+        ip,
+      });
 
-    return res.status(201).json({ accessToken, refreshToken });
+    return res.status(201).json({ accessToken, refreshToken, otpGenerated });
   }
 
   async getCurrentUser(req: Request, res: Response) {
