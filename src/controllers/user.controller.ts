@@ -61,4 +61,10 @@ export default class UserController {
 
     return res.sendStatus(HTTP.OK);
   }
+
+  async deleteMyAccount(req: Request, res: Response) {
+    await this.service.deleteMyAccount(res.locals.user);
+
+    return res.sendStatus(HTTP.OK);
+  }
 }

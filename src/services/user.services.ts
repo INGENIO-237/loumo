@@ -6,6 +6,8 @@ import HTTP from "../utils/constants/http.responses";
 import hashPassword from "../utils/hash-pwd";
 import { UserDocument } from "../models/user.model";
 import COMMON_MSG from "../utils/constants/common.msgs";
+import { UsersHooks } from "../hooks";
+import { USER_HOOK_ACTIONS } from "../utils/constants/hooks.actions";
 
 @Service()
 export default class UserService {
@@ -57,7 +59,11 @@ export default class UserService {
     userId: string,
     user:
       | UpdateUserInput["body"]
-      | (UpdateUserInput["body"] & { isVerified?: boolean; otp?: number })
+      | (UpdateUserInput["body"] & {
+          isVerified?: boolean;
+          otp?: number;
+          hasBeenDeleted?: boolean;
+        })
   ) {
     const currentUser = (await this.getUser({ id: userId })) as UserDocument;
 
@@ -89,7 +95,11 @@ export default class UserService {
     await this.repository.updateUser(userId, user);
   }
 
-  async becomeMerchant(userId: string){
+  async becomeMerchant(userId: string) {
     await this.repository.becomeMerchant(userId);
+  }
+
+  async deleteMyAccount(userId: string){
+    UsersHooks.emit(USER_HOOK_ACTIONS.SOFT_DELETE_ACCOUNT, (userId));
   }
 }
