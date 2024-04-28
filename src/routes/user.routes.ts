@@ -35,5 +35,10 @@ UsersRouter.put(
   isAuthenticated,
   tryCatch(controller.becomeMerchant.bind(controller))
 );
+UsersRouter.delete(
+  "/delete-my-account",
+  isAuthenticated,
+  tryCatch(controller.deleteMyAccount.bind(controller))
+);
 
 export default UsersRouter;
