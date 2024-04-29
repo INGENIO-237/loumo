@@ -2,7 +2,7 @@ import { Document, Schema, model } from "mongoose";
 
 export interface CategoryDocument extends Document {
   title: string;
-  tags: string[];
+  tags?: string[];
 }
 
 const categorySchema = new Schema({
@@ -10,4 +10,6 @@ const categorySchema = new Schema({
   tags: { type: [String], required: false },
 });
 
-const Category = model("Category", categorySchema);
+const Category = model<CategoryDocument>("Category", categorySchema);
+
+export default Category;
