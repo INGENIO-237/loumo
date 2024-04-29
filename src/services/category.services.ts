@@ -6,11 +6,15 @@ import { CreateCategoryInput } from "../schemas/category.schemas";
 export default class CategoryService {
   constructor(private repository: CategoryRepository) {}
 
-  async getCategories(){
-    return await this.repository.getCategories()
+  async getCategories() {
+    return await this.repository.getCategories();
   }
 
-  async createCategory(category: CreateCategoryInput["body"]){
-    return await this.repository.createCategory(category)
+  async createCategory(category: CreateCategoryInput["body"]) {
+    return await this.repository.createCategory(category);
+  }
+
+  async getCategory(catId: string) {
+    return await this.repository.getCategory(catId);
   }
 }

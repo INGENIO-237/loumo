@@ -11,4 +11,8 @@ export default class CategoryRepository {
   async createCategory(category: CreateCategoryInput["body"]) {
     return await Category.create(category);
   }
+
+  async getCategory(catId: string) {
+    return await Category.findById(catId);
+  }
 }
