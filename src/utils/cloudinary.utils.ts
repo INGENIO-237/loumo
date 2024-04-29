@@ -2,7 +2,7 @@ import { Request } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "node:fs";
 import logger from "./logger";
-import { CloudinaryImage } from "../models/store.model";
+import { CloudinaryResource } from "../types/product.types";
 
 /**
  * Uploads image to cloudinary remote bucket and
@@ -30,6 +30,6 @@ export async function uploader(req: Request, file: Express.Multer.File) {
   }
 }
 
-export async function deleteImage(image: CloudinaryImage) {
+export async function deleteImage(image: CloudinaryResource) {
   image.publicId && (await cloudinary.uploader.destroy(image.publicId));
 }
