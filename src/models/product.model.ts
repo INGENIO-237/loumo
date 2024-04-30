@@ -64,6 +64,19 @@ productSchema.post<ProductDocument>(
   }
 );
 
+productSchema.post<ProductDocument>(
+  "findOne",
+  function (result: ProductDocument, next) {
+    if (result)
+      result = {
+        ...result,
+        category: result.category.title,
+      } as ProductDocument;
+
+    next();
+  }
+);
+
 const Product = model("Product", productSchema);
 
 export default Product;

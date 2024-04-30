@@ -25,5 +25,9 @@ ProductRouter.post(
   uploadToCloudinary,
   tryCatch(controller.createProduct.bind(controller))
 );
+ProductRouter.get(
+  "/:product",
+  tryCatch(controller.getProduct.bind(controller))
+);
 
 export default ProductRouter;

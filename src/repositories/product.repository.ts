@@ -14,4 +14,11 @@ export default class ProductRepository {
   async createProduct(product: CreateProductInput) {
     return await Product.create(product);
   }
+
+  async getProduct(productId: string) {
+    return await Product.findById(productId).populate([
+      { path: "merchant", select: "email" },
+      { path: "category", select: "title -_id" },
+    ]);
+  }
 }

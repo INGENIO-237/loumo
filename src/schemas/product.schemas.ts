@@ -187,3 +187,23 @@ export type CreateProductInput = {
   characteristics?: string[] | undefined;
   additionals?: CloudinaryResource[] | undefined;
 };
+
+export const getProductSchema = object({
+  params: object({
+    product: string({
+      required_error: "Product reference isi required",
+      invalid_type_error: "Product reference must be a string",
+    }),
+  }).superRefine((data, ctx) => {
+    try {
+      new Types.ObjectId(data.product);
+    } catch (error) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Invalid product reference",
+      });
+    }
+  }),
+});
+
+export type GetProductRule = z.infer<typeof getProductSchema>;

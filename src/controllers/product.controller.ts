@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import ProductService from "../services/product.services";
-import { CreateProductInput } from "../schemas/product.schemas";
+import { CreateProductInput, GetProductRule } from "../schemas/product.schemas";
 import HTTP from "../utils/constants/http.responses";
 import { Service } from "typedi";
 
@@ -18,5 +18,11 @@ export default class ProductController {
     const product = await this.service.createProduct(req.body);
 
     return res.status(HTTP.CREATED).json(product);
+  }
+
+  async getProduct(req: Request<GetProductRule["params"]>, res: Response) {
+    const product = await this.service.getProduct(req.params.product);
+
+    return res.status(HTTP.OK).json(product);
   }
 }
