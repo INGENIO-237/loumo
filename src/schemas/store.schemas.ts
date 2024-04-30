@@ -1,5 +1,5 @@
 import { object, optional, string, z } from "zod";
-import { CloudinaryImage } from "../models/store.model";
+import { CloudinaryResource } from "../types/product.types";
 
 export const createStoreSchema = object({
   body: object({
@@ -12,15 +12,15 @@ export const createStoreSchema = object({
 });
 
 /**
- * Logo and BannerImage as cloudinaryImages(custom type)
+ * Logo and BannerImage as CloudinaryResources(custom type)
  * cause we'll only store the url and publicId(for deletion purpose)
  * of the remote image *
  * */
 export type CreateStoreInput = {
   user: string;
   name: string;
-  logo?: CloudinaryImage;
-  bannerImage?: CloudinaryImage;
+  logo?: CloudinaryResource;
+  bannerImage?: CloudinaryResource;
 };
 
 export const updateStoreSchema = object({
@@ -38,6 +38,6 @@ export const updateStoreSchema = object({
 
 export type UpdateStoreInput = {
   name?: string;
-  logo?: CloudinaryImage;
-  bannerImage?: CloudinaryImage;
+  logo?: CloudinaryResource;
+  bannerImage?: CloudinaryResource;
 };

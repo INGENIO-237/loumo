@@ -1,16 +1,12 @@
 import { Document, Schema, Types, model } from "mongoose";
 import { UserDocument } from "./user.model";
-
-export type CloudinaryImage = {
-  url: string;
-  publicId: string;
-}
+import { CloudinaryResource } from "../types/product.types";
 
 export interface StoreDocument extends Document {
   user: UserDocument["_id"];
   name: string;
-  logo: CloudinaryImage;
-  bannerImage: CloudinaryImage;
+  logo: CloudinaryResource;
+  bannerImage: CloudinaryResource;
   createdAt: Date;
   updateAt: Date;
 }

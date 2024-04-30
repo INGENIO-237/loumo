@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import connectToDatabase from "./db";
 import router from "../router";
 import errorHandler from "../utils/errors/errors.handler";
@@ -15,8 +15,17 @@ export default function createServer() {
   server.use(cors());
 
   server.use(express.json());
-  server.use(express.urlencoded({ extended: false }));
+  // server.use(express.urlencoded({ extended: false }));
   server.use(deserializeUser);
+
+  // server.use((req: Request, res: Response, next: NextFunction) => {
+  //   console.log({
+  //     type: req.headers["content-type"],
+  //     body: req.body,
+  //     files: req.files,
+  //     file: req.file,
+  //   });
+  // });
 
   cloudinary.config({
     api_key: config.CLOUDINARY_API_KEY as string,
