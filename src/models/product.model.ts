@@ -1,8 +1,10 @@
 import { Document, Schema, Types, model } from "mongoose";
 import { CategoryDocument } from "./category.model";
 import { CloudinaryResource } from "../types/product.types";
+import { UserDocument } from "./user.model";
 
 export interface ProductDocument extends Document {
+  merchant: UserDocument["_id"];
   name: string;
   category: CategoryDocument["_id"];
   tags?: string[];
@@ -13,6 +15,11 @@ export interface ProductDocument extends Document {
 }
 
 const productSchema = new Schema({
+  merchant: {
+    type: Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -20,6 +27,7 @@ const productSchema = new Schema({
   category: {
     type: Types.ObjectId,
     ref: "Category",
+    required: true,
   },
   tags: { type: [String], required: false },
   price: { type: Number, required: true },
@@ -41,6 +49,20 @@ const productSchema = new Schema({
     required: false,
   },
 });
+
+productSchema.post<ProductDocument>(
+  "find",
+  function (result: ProductDocument[], next) {
+    result = result.map((product) => {
+      return {
+        ...product,
+        category: product.category.title,
+      } as ProductDocument;
+    });
+
+    next();
+  }
+);
 
 const Product = model("Product", productSchema);
 

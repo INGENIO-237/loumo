@@ -3,7 +3,7 @@ import StoreRepository from "../repositories/store.repository";
 import { CreateStoreInput, UpdateStoreInput } from "../schemas/store.schemas";
 import ApiError from "../utils/errors/errors.base";
 import HTTP from "../utils/constants/http.responses";
-import { deleteImage } from "../utils/cloudinary.utils";
+import { deleteCloudinaryResource } from "../utils/cloudinary.utils";
 import COMMON_MSG from "../utils/constants/common.msgs";
 
 @Service()
@@ -31,9 +31,9 @@ export default class StoreService {
 
     await this.repository.updateStore(store._id, data);
 
-    if (data.logo && store.logo) await deleteImage(store.logo);
+    if (data.logo && store.logo) await deleteCloudinaryResource(store.logo);
 
     if (data.bannerImage && store.bannerImage)
-      await deleteImage(store.bannerImage);
+      await deleteCloudinaryResource(store.bannerImage);
   }
 }

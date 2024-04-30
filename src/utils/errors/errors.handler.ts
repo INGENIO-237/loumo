@@ -12,12 +12,10 @@ export default function errorHandler(
   logger.error(error);
   return error.isOperationalError
     ? res.status(error.statusCode).json([{ message: error.message }])
-    : res
-        .status(HTTP.INTERNAL_SERVER_ERROR)
-        .json([
-          {
-            message:
-              "Something went wrong. Retry later. If it persists, please contact service support.",
-          },
-        ]);
+    : res.status(HTTP.INTERNAL_SERVER_ERROR).json([
+        {
+          message:
+            "Something went wrong. Retry later. If it persists, please contact service support.",
+        },
+      ]);
 }

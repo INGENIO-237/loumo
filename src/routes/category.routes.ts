@@ -8,16 +8,16 @@ import validate from "../middlewares/validate.request";
 import { createCategorySchema } from "../schemas/category.schemas";
 import isAuthenticated from "../middlewares/isAuthenticated";
 
-const CategoryRoutes = Router();
+const CategoryRouter = Router();
 
 const controller = Container.get(CategoryController);
 
-CategoryRoutes.get("", tryCatch(controller.getCategories.bind(controller)));
-CategoryRoutes.post(
+CategoryRouter.get("", tryCatch(controller.getCategories.bind(controller)));
+CategoryRouter.post(
   "",
   isAuthenticated,
   validate(createCategorySchema),
   tryCatch(controller.createCategory.bind(controller))
 );
 
-export default CategoryRoutes;
+export default CategoryRouter;
