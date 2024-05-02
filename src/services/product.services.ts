@@ -1,6 +1,6 @@
 import { Service } from "typedi";
 import ProductRepository from "../repositories/product.repository";
-import { CreateProductInput } from "../schemas/product.schemas";
+import { CreateProductInput, FilterProductsRule } from "../schemas/product.schemas";
 import ApiError from "../utils/errors/errors.base";
 import COMMON_MSG from "../utils/constants/common.msgs";
 import HTTP from "../utils/constants/http.responses";
@@ -9,8 +9,8 @@ import HTTP from "../utils/constants/http.responses";
 export default class ProductService {
   constructor(private repository: ProductRepository) {}
 
-  async getProducts() {
-    return await this.repository.getProducts();
+  async getProducts(filter: FilterProductsRule["query"] = undefined) {
+    return await this.repository.getProducts(filter);
   }
 
   async createProduct(product: CreateProductInput) {

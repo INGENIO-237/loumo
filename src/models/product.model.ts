@@ -7,7 +7,7 @@ export interface ProductDocument extends Document {
   merchant: UserDocument["_id"];
   name: string;
   category: CategoryDocument["_id"];
-  tags?: string[];
+  tags?: string[] | [];
   price: number;
   characteristics?: string[];
   mainImage: CloudinaryResource;
@@ -29,7 +29,7 @@ const productSchema = new Schema({
     ref: "Category",
     required: true,
   },
-  tags: { type: [String], required: false },
+  tags: { type: [String], default: [] },
   price: { type: Number, required: true },
   characteristics: { type: [String], required: false },
   mainImage: {

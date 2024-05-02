@@ -1,10 +1,38 @@
 import { Service } from "typedi";
 import Product from "../models/product.model";
-import { CreateProductInput } from "../schemas/product.schemas";
+import {
+  CreateProductInput,
+  FilterProductsRule,
+} from "../schemas/product.schemas";
+import { Types } from "mongoose";
 
 @Service()
 export default class ProductRepository {
-  async getProducts() {
+  async getProducts(filter: FilterProductsRule["query"] = undefined) {
+    const { merchant, category, tags } = filter!;
+
+    if (merchant || category || tags) {
+      return await Product.aggregate([
+        {
+          $match: {
+            $or: [
+              { merchant: new Types.ObjectId(merchant) },
+              { category: category },
+            ],
+          },
+        },
+        // {
+        //   $group: {
+        //     _id: "$category",
+        //   },
+        // },
+      ]);
+
+      // return await Product.find({
+      //   $or: [{ merchant }, { category }, { tags: { $in: tags } }],
+      // });
+    }
+
     return await Product.find().populate([
       { path: "merchant", select: "email" },
       { path: "category", select: "title -_id" },

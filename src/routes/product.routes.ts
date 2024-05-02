@@ -8,12 +8,20 @@ import isAuthenticated from "../middlewares/isAuthenticated";
 import uploadToCloudinary from "../middlewares/cloudinary.upload";
 import upload from "../utils/multer";
 import validate from "../middlewares/validate.request";
-import { createProductSchema } from "../schemas/product.schemas";
+import {
+  createProductSchema,
+  filterProductsSchema,
+  getProductSchema,
+} from "../schemas/product.schemas";
 
 const ProductRouter = Router();
 const controller = Container.get(ProductController);
 
-ProductRouter.get("", tryCatch(controller.getProducts.bind(controller)));
+ProductRouter.get(
+  "",
+  validate(filterProductsSchema),
+  tryCatch(controller.getProducts.bind(controller))
+);
 ProductRouter.post(
   "",
   isAuthenticated,
@@ -27,6 +35,13 @@ ProductRouter.post(
 );
 ProductRouter.get(
   "/:product",
+  validate(getProductSchema),
+  tryCatch(controller.getProduct.bind(controller))
+);
+ProductRouter.get(
+  "/store",
+  isAuthenticated,
+  validate(filterProductsSchema),
   tryCatch(controller.getProduct.bind(controller))
 );
 

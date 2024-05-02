@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import ProductService from "../services/product.services";
-import { CreateProductInput, GetProductRule } from "../schemas/product.schemas";
+import {
+  CreateProductInput,
+  FilterProductsRule,
+  GetProductRule,
+} from "../schemas/product.schemas";
 import HTTP from "../utils/constants/http.responses";
 import { Service } from "typedi";
 
@@ -8,8 +12,11 @@ import { Service } from "typedi";
 export default class ProductController {
   constructor(private service: ProductService) {}
 
-  async getProducts(req: Request, res: Response) {
-    const products = await this.service.getProducts();
+  async getProducts(
+    req: Request<{}, {}, {}, FilterProductsRule["query"]>,
+    res: Response
+  ) {
+    const products = await this.service.getProducts(req.query);
 
     return res.status(HTTP.OK).json(products);
   }
@@ -24,5 +31,14 @@ export default class ProductController {
     const product = await this.service.getProduct(req.params.product);
 
     return res.status(HTTP.OK).json(product);
+  }
+
+  async getStore(
+    req: Request<{}, {}, {}, FilterProductsRule["query"]>,
+    res: Response
+  ) {
+    const products = await this.service.getProducts(req.query);
+
+    return res.status(HTTP.OK).json(products);
   }
 }
