@@ -110,7 +110,7 @@ export const createProductSchema = object({
           throwExpection: false,
         })
         .then((user) => {
-          if (!user || !user.isMerchant || user.hasBeenDeleted)
+          if (!user?.isMerchant || user?.hasBeenDeleted)
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: "Unregistered merchant",
