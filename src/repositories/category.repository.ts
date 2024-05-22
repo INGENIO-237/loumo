@@ -5,7 +5,7 @@ import { CreateCategoryInput } from "../schemas/category.schemas";
 @Service()
 export default class CategoryRepository {
   async getCategories() {
-    return await Category.find();
+    return await Category.find().select("-__v");
   }
 
   async createCategory(category: CreateCategoryInput["body"]) {

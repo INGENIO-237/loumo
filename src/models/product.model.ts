@@ -77,6 +77,6 @@ productSchema.post<ProductDocument>(
   }
 );
 
-const Product = model("Product", productSchema);
+const Product = model<ProductDocument>("Product", productSchema);
 
 export default Product;

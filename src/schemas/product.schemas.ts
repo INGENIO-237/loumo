@@ -226,6 +226,8 @@ export const filterProductsSchema = object({
           invalid_type_error: "Product's tags must be an array of tags",
         })
       ),
+      perPage: optional(string()),
+      page: optional(string()),
     })
   ).superRefine((data, ctx) => {
     if (data?.merchant) {
@@ -287,6 +289,24 @@ export const filterProductsSchema = object({
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Invalid category",
+        });
+      }
+    }
+
+    if (data?.page) {
+      if (Number.isNaN(data.page)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Page must be a number",
+        });
+      }
+    }
+
+    if (data?.perPage) {
+      if (Number.isNaN(data.perPage)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Number of products per page must be a number",
         });
       }
     }

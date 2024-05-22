@@ -9,34 +9,40 @@ import { Types } from "mongoose";
 @Service()
 export default class ProductRepository {
   async getProducts(filter: FilterProductsRule["query"] = undefined) {
-    const { merchant, category, tags } = filter!;
+    const total = await Product.countDocuments();
+    let products;
 
-    if (merchant || category || tags) {
-      return await Product.aggregate([
+    // Skip in case filter == {}
+    if (filter && Object.keys(filter).length > 0) {
+      const { merchant, category, tags = [], page, perPage } = filter!;
+
+      products = await Product.aggregate([
         {
           $match: {
             $or: [
               { merchant: new Types.ObjectId(merchant) },
-              { category: category },
+              { category },
+              { tags: { $in: tags } },
             ],
           },
         },
+        { $skip: (Number(page) - 1) * Number(perPage) },
+        { $limit: Number(perPage) },
         // {
         //   $group: {
         //     _id: "$category",
+        //     products: { $push: "$$ROOT" },
         //   },
         // },
       ]);
-
-      // return await Product.find({
-      //   $or: [{ merchant }, { category }, { tags: { $in: tags } }],
-      // });
+    } else {
+      products = await Product.find().populate([
+        { path: "merchant", select: "email" },
+        { path: "category", select: "title -_id" },
+      ]);
     }
 
-    return await Product.find().populate([
-      { path: "merchant", select: "email" },
-      { path: "category", select: "title -_id" },
-    ]);
+    return { total, products };
   }
 
   async createProduct(product: CreateProductInput) {

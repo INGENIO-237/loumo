@@ -33,11 +33,11 @@ export default class ProductController {
     return res.status(HTTP.OK).json(product);
   }
 
-  async getStore(
-    req: Request<{}, {}, {}, FilterProductsRule["query"]>,
-    res: Response
-  ) {
-    const products = await this.service.getProducts(req.query);
+  async getStore(req: Request, res: Response) {
+    const products = await this.service.getProducts({
+      ...req.query,
+      merchant: res.locals.user,
+    });
 
     return res.status(HTTP.OK).json(products);
   }

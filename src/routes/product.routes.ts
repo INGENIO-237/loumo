@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { tryCatch } from "../utils/errors/errors.utils";
 import Container from "typedi";
 import ProductController from "../controllers/product.controller";
@@ -34,14 +34,15 @@ ProductRouter.post(
   tryCatch(controller.createProduct.bind(controller))
 );
 ProductRouter.get(
-  "/:product",
-  validate(getProductSchema),
-  tryCatch(controller.getProduct.bind(controller))
-);
-ProductRouter.get(
   "/store",
   isAuthenticated,
   validate(filterProductsSchema),
+  tryCatch(controller.getStore.bind(controller))
+);
+
+ProductRouter.get(
+  "/:product",
+  validate(getProductSchema),
   tryCatch(controller.getProduct.bind(controller))
 );
 
