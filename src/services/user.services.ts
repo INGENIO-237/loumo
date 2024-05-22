@@ -85,7 +85,10 @@ export default class UserService {
         throwExpection: false,
       });
 
-      if (existingPhoneNumber && currentUser._id != existingPhoneNumber._id)
+      if (
+        existingPhoneNumber &&
+        currentUser._id.toString() !== existingPhoneNumber._id.toString()
+      )
         throw new ApiError(COMMON_MSG.inUse("Phone number"), HTTP.BAD_REQUEST);
     }
 
@@ -99,7 +102,7 @@ export default class UserService {
     await this.repository.becomeMerchant(userId);
   }
 
-  async deleteMyAccount(userId: string){
-    UsersHooks.emit(USER_HOOK_ACTIONS.SOFT_DELETE_ACCOUNT, (userId));
+  async deleteMyAccount(userId: string) {
+    UsersHooks.emit(USER_HOOK_ACTIONS.SOFT_DELETE_ACCOUNT, userId);
   }
 }

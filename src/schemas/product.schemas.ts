@@ -207,3 +207,110 @@ export const getProductSchema = object({
 });
 
 export type GetProductRule = z.infer<typeof getProductSchema>;
+
+export const filterProductsSchema = object({
+  query: optional(
+    object({
+      merchant: optional(
+        string({
+          invalid_type_error: "Merchant must be a string",
+        })
+      ),
+      category: optional(
+        string({
+          invalid_type_error: "Category must be a string",
+        })
+      ),
+      tags: optional(
+        array(string({ invalid_type_error: "A tag must be of type string" }), {
+          invalid_type_error: "Product's tags must be an array of tags",
+        })
+      ),
+      perPage: optional(string()),
+      page: optional(string()),
+    })
+  ).superRefine((data, ctx) => {
+    if (data?.merchant) {
+      const userService = Container.get(UserService);
+      try {
+        // Check if passed value can be parsed into an ObjectId instance
+        new Types.ObjectId(data.merchant);
+
+        // Then proceed
+        userService
+          .getUser({
+            id: data.merchant,
+            throwExpection: false,
+          })
+          .then((user) => {
+            if (!user || !user.isMerchant || user.hasBeenDeleted)
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Unregistered merchant",
+              });
+          })
+          .catch((error) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Invalid merchant",
+            });
+          });
+      } catch (error) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Invalid merchant",
+        });
+      }
+    }
+
+    if (data?.category) {
+      const catService = Container.get(CategoryService);
+
+      try {
+        // Check if passed value can be parsed into an ObjectId instance
+        new Types.ObjectId(data.category);
+
+        catService
+          .getCategory(data.category)
+          .then((category) => {
+            if (!category)
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "The category provided doesn't exist",
+              });
+          })
+          .catch((error) => {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Invalid category",
+            });
+          });
+      } catch (error) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Invalid category",
+        });
+      }
+    }
+
+    if (data?.page) {
+      if (Number.isNaN(data.page)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Page must be a number",
+        });
+      }
+    }
+
+    if (data?.perPage) {
+      if (Number.isNaN(data.perPage)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Number of products per page must be a number",
+        });
+      }
+    }
+  }),
+});
+
+export type FilterProductsRule = z.infer<typeof filterProductsSchema>;
