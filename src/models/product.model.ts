@@ -12,43 +12,51 @@ export interface ProductDocument extends Document {
   characteristics?: string[];
   mainImage: CloudinaryResource;
   additionals?: CloudinaryResource[];
+  hasBeenDeleted: boolean;
 }
 
-const productSchema = new Schema({
-  merchant: {
-    type: Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: Types.ObjectId,
-    ref: "Category",
-    required: true,
-  },
-  tags: { type: [String], default: [] },
-  price: { type: Number, required: true },
-  characteristics: { type: [String], required: false },
-  mainImage: {
-    type: {
-      url: { type: String, required: true },
-      publicId: { type: String, required: true },
+const productSchema = new Schema(
+  {
+    merchant: {
+      type: Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    required: true,
-  },
-  additionals: {
-    type: [
-      {
+    name: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+    tags: { type: [String], default: [] },
+    price: { type: Number, required: true },
+    characteristics: { type: [String], required: false },
+    mainImage: {
+      type: {
         url: { type: String, required: true },
         publicId: { type: String, required: true },
       },
-    ],
-    required: false,
+      required: true,
+    },
+    additionals: {
+      type: [
+        {
+          url: { type: String, required: true },
+          publicId: { type: String, required: true },
+        },
+      ],
+      required: false,
+    },
+    hasBeenDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-});
+  { timestamps: true }
+);
 
 productSchema.post<ProductDocument>(
   "find",

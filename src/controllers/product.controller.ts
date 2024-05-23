@@ -41,4 +41,13 @@ export default class ProductController {
 
     return res.status(HTTP.OK).json(products);
   }
+
+  async deleteProduct(req: Request<{ product: string }>, res: Response) {
+    await this.service.deleteProduct(
+      req.params.product,
+      res.locals.user as string
+    );
+
+    return res.sendStatus(HTTP.OK);
+  }
 }
