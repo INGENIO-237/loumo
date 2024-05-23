@@ -46,4 +46,9 @@ ProductRouter.get(
   tryCatch(controller.getProduct.bind(controller))
 );
 
+ProductRouter.delete(
+  "/:product",
+  tryCatch(controller.deleteProduct.bind(controller))
+);
+
 export default ProductRouter;
